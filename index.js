@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const bodyParser = require('body-parser');
 app.use(express.json());
@@ -11,7 +12,7 @@ dotenv.config()
 
 //// port and localUrl
 const PORT = process.env.PORT || 3000;
-const currentUrl = `${process.env.currencyUrl}:${PORT}`;
+const currentUrl = `${process.env.CURRENTURL}:${PORT}`;
 
 //// db serevr from env
 const cloudDB = process.env.databaseUrl
@@ -23,11 +24,11 @@ app.get('/', (req, res) => {
     res.send('hello there')
 });
 
-// // Import routes
-// const authRoute = require('./routes/authRoute');
+// Import routes
+const authRoute = require('./routes/authRoute');
 
-// // Routes middlewares
-// app.use('/api/auth', authRoute);
+// Routes middlewares
+app.use('/api/auth', authRoute);
 
 // Database connection
 mongoose.connect(dataB, { useNewUrlParser: true, useUnifiedTopology: true });
