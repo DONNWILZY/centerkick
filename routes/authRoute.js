@@ -1,16 +1,33 @@
 const express = require('express');
 const router = express.Router();
+
 // const {handleValidationErrors} = require('../validator/validate');
 // const {registerValidator} = require('../validator/authValidator');
-const {registerUser, loginUser, requestOTP, verifyOTP, changePassword, resetPassword, verifyPasswordOtp, newPassword} = require('../controllers/authContollers');
-const {verifyToken, verifyUser, verifyAdmin, verifyModerator, } = require('../middlewares/UserAuth');
 
-router.get('/', (req, res)=>{
+const {
+    registerUser,
+    loginUser,
+    requestOTP,
+    verifyOTP,
+    changePassword,
+    resetPassword,
+    verifyPasswordOtp,
+    newPassword } = require('../controllers/authContollers'
+    );
+
+const {
+    verifyToken,
+    verifyUser,
+    verifyAdmin,
+    verifyModerator, } = require('../middlewares/UserAuth');
+
+    // default route
+router.get('/', (req, res) => {
     res.send('YOU GO FILL FORM TIRE. LOL. EVERUTHING AUTH DEH HERE')
 })
 
 // User registration route registerUser
-router.post('/register',  registerUser);
+router.post('/register', registerUser);
 
 /////// LOGIN-ROUTE loginUser
 router.post('/login', loginUser);
@@ -26,13 +43,13 @@ router.post('/verifyotp', verifyOTP);
 router.put('/changePassword', verifyToken, changePassword);
 
 ////////RESET PASSWORD restPassword
-router.post('/resetPasswordRequest',  resetPassword);
+router.post('/resetPasswordRequest', resetPassword);
 
 //////// VERIFY PASSWORD RESET OTP verifyPasswordOtp
-router.post('/verifyPasswordOTP',  verifyPasswordOtp);
+router.post('/verifyPasswordOTP', verifyPasswordOtp);
 
 ////// new pssword newPassword
-router.put('/newPassword',  newPassword);
+router.put('/newPassword', newPassword);
 
 
 
