@@ -18,7 +18,7 @@ const currentUrl = `${process.env.CURRENTURL}:${PORT}`;
 const cloudDB = process.env.databaseUrl
 const localDB = process.env.MONGODB_URI
 
-const dataB = localDB || cloudDB
+const dataB =  cloudDB || localDB 
 
 app.get('/', (req, res) => {
     res.send('hello there')
