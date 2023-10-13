@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-//const validateFileds = require('../validator/validate');
+const validateFileds = require('../validator/validate');
 const {registerUser, loginUser, requestOTP, verifyOTP, changePassword, resetPassword, verifyPasswordOtp, newPassword} = require('../controllers/authContollers');
 const {verifyToken, verifyUser, verifyAdmin, verifyModerator, } = require('../middlewares/UserAuth');
 

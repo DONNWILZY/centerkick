@@ -18,7 +18,7 @@ const generateOTPCode = () => {
   };
 
   const registerUser = async (req, res) => {
-    const { firstName, lastName, username, phoneNumber, email, password } = req.body;
+    const { fullname, email, password } = req.body;
   
     try {
       // Check if the user with the given email already exists
@@ -58,7 +58,7 @@ const generateOTPCode = () => {
           subject: "Verify Your Email",
           html: `
             <h1>Email Verification</h1>
-            <h3>Welcome ${lastName}, </h3>
+            <h3>Welcome ${fullname}, </h3>
             <p>Please enter the verification code to continue.</p>
             <h2><strong>${otpCode}</strong></h2>
           `,
@@ -76,13 +76,10 @@ const generateOTPCode = () => {
       // If the user does not exist, create a new user and set their verified status to false
       const hashedPassword = await bcrypt.hash(password, 10); // 10 is the number of salt rounds
       const newUser = new User({
-        firstName,
-        lastName,
-        username,
-        phoneNumber,
-        email,
+        fullname,
+       email,
         password: hashedPassword,
-        verified: false,
+        verifiedEmail: false,
       });
   
       const savedUser = await newUser.save();
@@ -109,7 +106,7 @@ const generateOTPCode = () => {
         subject: "Verify Your Email",
         html: `
         <h1>Email Verification</h1>
-        <p> Hello, ${lastName}, Welcome to GleegX Tv. Please enter the verification code to continue.</p>
+        <p> Hello, ${fullname}, Welcome to Center Kick Community. Please enter the verification code to continue.</p>
         <h3><strong>${otpCode}</strong></h3>
         `,
       };
@@ -136,9 +133,9 @@ const generateOTPCode = () => {
   //////////SIGN-IN USER
   const loginUser = async (req, res, next) => {
     try {
-      const { username, email, password } = req.body;
+      const {  email, password } = req.body;
   
-      if (!username && !email) {
+      if (!email) {
         return res.status(400).json({
           status: "failed",
           message: "Username or Email field is required",
@@ -150,11 +147,8 @@ const generateOTPCode = () => {
       if (email) {
         // If an email is provided, find the user by email
         user = await User.findOne({ email });
-      } else {
-        // If username is provided, find the user by username
-        user = await User.findOne({ username });
       }
-  
+
       if (!user) {
         return res.status(404).json({
           status: "failed",
@@ -179,7 +173,7 @@ const generateOTPCode = () => {
       }
   
       // Set the user's activeStatus to "online"
-      user.activeStatus = "online";
+      // user.activeStatus = "online";
       await user.save();
   
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SEC_KEY, {
@@ -189,38 +183,8 @@ const generateOTPCode = () => {
       // Create a user details object with the desired fields
       let userDetails = {
         _id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        username: user.username,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        role: user.role,
-        activeStatus: user.activeStatus,
-        gender: user.gender,
-        dob: user.dob,
-        relationshipStatus: user.relationshipStatus,
-        placeOfOrigin: user.placeOfOrigin,
-        resident: user.resident,
-        academic: user.academic,
-        employment: user.employment,
-        interestedIn: user.interestedIn,
-        lookingFor: user.lookingFor,
-        bio: user.bio,
-        socialMedia: user.socialMedia,
-        pastRelationship: user.pastRelationship,
-        yourChoiceOfPartner: user.yourChoiceOfPartner,
-        redFlags: user.redFlags,
-        dealBreaker: user.dealBreaker,
-        dislikes: user.dislikes,
-        likes: user.likes,
-        expectations: user.expectations,
-        yourKindOfPartner: user.yourKindOfPartner,
-        yourIdealPartner: user.yourIdealPartner,
-        profilePhotos: user.profilePhotos,
-        timelinePhotos: user.timelinePhotos,
-        followers: user.followers,
-        following: user.following,
-        messages: user.messages,
+        fullname: user.fullname,
+        email: user.email,        
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       };

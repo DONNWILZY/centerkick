@@ -1,3 +1,5 @@
+//validator\validate.js
+
 const { validationResult } = require("express-validator");
 
 // Middleware to run validation and handle errors

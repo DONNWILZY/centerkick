@@ -49,11 +49,9 @@ db.once('close', () => {
 
 
 
-app.get('/', (req, res) => {
-    res.send(`i am here at ${currencyUrl} & Db${dataB}`)
-})
-
-
+// app.get('/', (req, res) => {
+//     res.send(`i am here at ${currencyUrl} & Db${dataB}`)
+// })
 
 
 app.listen(PORT, (req, res) => {
