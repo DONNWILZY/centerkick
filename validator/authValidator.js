@@ -1,8 +1,9 @@
-const { check } = require("express-validator");
+const { body, validationResult } = require('express-validator');
+const {handleValidationErrors} = require('../validator/validate');
 
 // Define validation rules for user registration
 const registerValidator = [
-  check("firstName")
+    handleValidationErrors("firstName")
     .trim()
     .notEmpty()
     .withMessage("First Name is required")
@@ -11,15 +12,15 @@ const registerValidator = [
 
   
 
-  check("phoneNumber").notEmpty().withMessage("Phone Number is required"),
+    handleValidationErrors("phoneNumber").notEmpty().withMessage("Phone Number is required"),
 
-  check("email")
+    handleValidationErrors("email")
     .notEmpty()
     .withMessage("Email is required")
     .isEmail()
     .withMessage("Invalid email format"),
 
-  check("password")
+    handleValidationErrors("password")
     .notEmpty()
     .withMessage("Password is required")
     .isLength({ min: 6 })
@@ -28,13 +29,13 @@ const registerValidator = [
 
 // Define validation rules for user login
 const loginValidator = [
-  check("email")
+    handleValidationErrors("email")
     .notEmpty()
     .withMessage("Email is required")
     .isEmail()
     .withMessage("Invalid email format"),
 
-  check("password")
+    handleValidationErrors("password")
     .notEmpty()
     .withMessage("Password is required")
     .isLength({ min: 6 })

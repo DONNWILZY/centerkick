@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const validateFileds = require('../validator/validate');
+// const {handleValidationErrors} = require('../validator/validate');
+// const {registerValidator} = require('../validator/authValidator');
 const {registerUser, loginUser, requestOTP, verifyOTP, changePassword, resetPassword, verifyPasswordOtp, newPassword} = require('../controllers/authContollers');
 const {verifyToken, verifyUser, verifyAdmin, verifyModerator, } = require('../middlewares/UserAuth');
 
@@ -9,7 +10,7 @@ router.get('/', (req, res)=>{
 })
 
 // User registration route registerUser
-router.post('/register', registerUser);
+router.post('/register',  registerUser);
 
 /////// LOGIN-ROUTE loginUser
 router.post('/login', loginUser);
