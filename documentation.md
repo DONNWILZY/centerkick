@@ -25,12 +25,23 @@ Response
 Status Code: 200 OK on success
 Content-Type: application/json
 
-# SIGN In ROUTE
+# SIGN IN ROUTE
 
-*ROUTE:* api/auth/register 
+*ROUTE:* Route: POST /api/auth/login
+
+Request
+Method: POST
+Endpoint: https://centerkick.vercel.app/api/auth/login
+Headers: None
 ```
+POST https://centerkick.vercel.app/api/auth/login
+Content-Type: application/json
+
 {
 	"email": "godswill@gmail.com",
 	"password": "********"
 }
+
 ```
+
+#
