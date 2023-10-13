@@ -74,7 +74,7 @@ const generateOTPCode = () => {
       const hashedPassword = await bcrypt.hash(password, 10); // 10 is the number of salt rounds
       const newUser = new User({
         fullname,
-        email,
+        email, // Ensure email uniqueness is enforced in your database schema
         password: hashedPassword,
         verifiedEmail: false,
       });
@@ -122,6 +122,7 @@ const generateOTPCode = () => {
       });
     }
   };
+  
   
 
 
