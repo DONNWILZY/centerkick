@@ -44,4 +44,78 @@ Content-Type: application/json
 
 ```
 
-#
+# requestotp
+
+*ROUTE:* Method: POST /api/auth/requestotp
+
+Request
+Method: POST
+Endpoint: https://centerkick.vercel.app/api/auth/requestotp
+Headers: None
+
+```
+POST https://centerkick.vercel.app/api/auth/requestotp
+Content-Type: application/json
+
+{
+	
+	"email": "godswill@gmail.com"
+
+}
+
+```
+
+
+# verifyotp
+
+*ROUTE:* Method: POST /api/auth/verifyotp
+
+Request
+Method: POST
+Endpoint: https://centerkick.vercel.app/api/auth/verifyotp
+Headers: None
+
+```
+POST https://centerkick.vercel.app/api/auth/verifyotp
+Content-Type: application/json
+
+{
+	
+	
+  "userId": "64f7aab35803d3febaef01b9",
+  "verificationCode": "896204" 
+
+
+}
+
+```
+
+# changePassword
+
+
+*ROUTE:* Method: PUT /api/auth/changePassword
+
+Request
+Method: PUT
+Endpoint: https://centerkick.vercel.app/api/auth/changePassword
+Headers: None
+
+```
+POST https://centerkick.vercel.app/api/auth/changePassword
+Content-Type: application/json
+
+{
+	
+    "currentPassword": "password123",
+  "newPassword": "password1234"
+
+
+}
+
+```
+
+# resetPasswordRequest
+
+# verifyPasswordOTP
+
+# newPassword
