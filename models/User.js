@@ -1,108 +1,76 @@
 const mongoose = require('mongoose');
 
-//// User Schema
+// Define the User Schema
 const userSchema = new mongoose.Schema({
   fullname: {
     type: String,
     required: true,
   },
-
   password: {
     type: String,
     required: true,
   },
-
-
   phoneNumber: {
     type: String,
     unique: true,
-    //required: true,
   },
-
   email: {
     type: String,
     unique: true,
     required: true,
   },
-  
   verifiedEmail: {
     type: Boolean,
     default: false,
   },
-
   verifiedPhone: {
     type: Boolean,
     default: false,
   },
-
   gender: {
     type: String,
     enum: ['male', 'female', 'other'],
   },
-
-  dob: {
-    type: Date,
-  },
-
   role: {
     type: String,
     enum: ['isUser', 'isAdmin', 'isModerator'],
     default: 'isUser',
   },
-
-
-  placeOfOrigin: {
-    town: {
-        type: String
-    },
-    state: {
-        type: String
-    },
-    country: {
-        type: String
-    },
-  },
-  resident: {
-    town: {
-        type: String
-    },
-    state: {
-        type: String
-    },
-    country: {
-        type: String
-    },
-  },
-  
-  profilePhotos: [
+  images: [
     {
       url: {
-        type: String
+        type: String,
       },
-      description: {
-        type: String
+      caption: {
+        type: String,
       },
     },
   ],
- 
-
-
-
-  // createdBy field as an array of objects
+  displayPhoto: {
+    url: {
+      type: String,
+    },
+    caption: {
+      type: String,
+    },
+  },
+  isAthlete: {
+    type: Boolean,
+  },
   createdBy: [
     {
       admin: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
       },
-      fullnme: {
-        type: String
+      fullname: {  // Corrected field name
+        type: String,
       },
       email: {
-        type: String
+        type: String,
       },
       content: {
-        type: String
+        type: String,
       },
       timestamp: {
         type: Date,
@@ -111,9 +79,12 @@ const userSchema = new mongoose.Schema({
     },
   ],
 },
-  //////// TIME STAMPS -- CREATED AT AND UPDATED //////
-  { timestamps: true }
-);
+
+
+{
+  // Time Stamps: Created At and Updated
+  timestamps: true,
+});
 
 // Create the User model
 const User = mongoose.model('User', userSchema);

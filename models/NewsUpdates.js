@@ -1,94 +1,80 @@
 const mongoose = require('mongoose');
 
+// Comment Schema
 const commentSchema = new mongoose.Schema({
   objectId: {
     type: mongoose.Types.ObjectId,
-    //required: true,
+    // required: true,
   },
-    text: {
+  text: {
+    type: String,
+    required: true,
+  },
+  PostAuthor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+  commentedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  replies: [
+    {
+      text: {
         type: String,
         required: true,
       },
-      PostAuthor: {
+      image: {
+        type: String,
+        // required: true,
+      },
+      commentAuthor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
+        // required: true,
+      },
+      repliedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        // required: true,
       },
       date: {
         type: Date,
         default: Date.now,
       },
-      // post: {
-      //   type: mongoose.Schema.Types.ObjectId,
-      //   ref: 'Blog',
-      //  required: true,
-      // },
-      commentedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-       required: true,
-      },
-  replies: [
-       {
-      text: {
-        type: String,
-       required: true,
-      },
-      image: {
-        type: String,
-       // required: true,
-      },
-      commentAuthor: {
-        type: mongoose.Schema.Types.ObjectId, // Reference to the User model
-        ref: 'User', // Reference the 'User' model
-        //required: true,
-      },
-
-      repliedBy: {
-        type: mongoose.Schema.Types.ObjectId, // Reference to the User model
-        ref: 'User', // Reference the 'User' model
-        //required: true,
-      },
-
-         date: {
-        type: Date,
-        default: Date.now,
-      },
-       reactions: [reactionSchema], 
     },
   ],
-},
-//////// TIME STAMPS -- CREATED AT AND UPDATED //////
-{ timestamps: true }
-);
+}, { timestamps: true });
 
+// Post Schema
 const postSchema = new mongoose.Schema({
   objectId: {
     type: mongoose.Types.ObjectId,
-  // required: true,
+    // required: true,
   },
   title: {
     type: String,
     required: true,
   },
-
   postedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  
   author: {
     type: String,
     required: true,
   },
-
   date: {
     type: Date,
     default: Date.now,
   },
-
-  
   category: {
     type: String,
   },
@@ -104,25 +90,13 @@ const postSchema = new mongoose.Schema({
   featuredImage: {
     type: String,
   },
-  images: [
-    {
-      url: {
-        type: String,
-      },
-      caption: {
-        type: String,
-      },
-    },
-  ],
   comments: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Comment',
+      ref: 'Comment', // Reference the Comment schema
     },
-  ],
-//   likes: {
-//     type: Number,
-//   },
+],
+
   views: {
     type: Number,
   },
@@ -149,21 +123,39 @@ const postSchema = new mongoose.Schema({
   isTrending: {
     type: Boolean,
   },
-  
   dateTime: {
     type: Date,
     default: Date.now,
   },
+}, { timestamps: true });
 
-  // Other blog fields (if any)
-},
-//////// TIME STAMPS -- CREATED AT AND UPDATED //////
-{ timestamps: true }
-
-);
-
+// Statistics Schema
+const statsSchema = new mongoose.Schema({
+  postStats: {
+    totalPosts: {
+      type: Number,
+      default: 0,
+    },
+    // Add more statistics fields for posts if needed
+  },
+  commentStats: {
+    totalComments: {
+      type: Number,
+      default: 0,
+    },
+    // Add more statistics fields for comments if needed
+  },
+  replyStats: {
+    totalReplies: {
+      type: Number,
+      default: 0,
+    },
+    // Add more statistics fields for replies if needed
+  },
+}, { timestamps: true });
 
 const Post = mongoose.model('Post', postSchema);
 const Comment = mongoose.model('Comment', commentSchema);
+const Stats = mongoose.model('Stats', statsSchema);
 
-module.exports = { Post, Comment };
+module.exports = { Post, Comment, Stats };
