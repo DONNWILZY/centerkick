@@ -116,6 +116,24 @@ Content-Type: application/json
 
 # resetPasswordRequest
 
+
+*ROUTE:* Method: PUT /api/auth/resetPasswordRequest
+
+Request
+Method: PUT
+Endpoint: https://centerkick.vercel.app/api/auth/resetPasswordRequest
+Headers: None
+
+```
+POST https://centerkick.vercel.app/api/auth/resetPasswordRequest
+Content-Type: application/json
+
+{
+   "identifier": "godswilleffiongdev@gmail.cm"
+}
+
+```
+
 # verifyPasswordOTP
 
 # newPassword
