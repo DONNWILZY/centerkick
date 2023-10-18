@@ -1,6 +1,32 @@
 ///NewsUpdates.js
 const mongoose = require('mongoose');
 
+// Reply Schema
+const replySchema = new mongoose.Schema({
+  text: {
+    type: String,
+    // required: true,
+  },
+  image: {
+    type: String,
+    // required: true,
+  },
+  commentAuthor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    // required: true,
+  },
+  repliedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    // required: true,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+}, { timestamps: true });
+
 // Comment Schema
 const commentSchema = new mongoose.Schema({
   text: {
@@ -21,32 +47,8 @@ const commentSchema = new mongoose.Schema({
     ref: 'User',
     //required: true,
   },
-  replies: [
-    {
-      text: {
-        type: String,
-        //required: true,
-      },
-      image: {
-        type: String,
-        // required: true,
-      },
-      commentAuthor: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        // required: true,
-      },
-      repliedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        // required: true,
-      },
-      date: {
-        type: Date,
-        default: Date.now,
-      },
-    },
-  ],
+  replies: [replySchema], 
+
 }, { timestamps: true });
 
 // Post Schema
@@ -145,8 +147,9 @@ const allStatsSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
+const Reply = mongoose.model('Reply', replySchema);
 const Post = mongoose.model('Post', postSchema);
 const Comment = mongoose.model('Comment', commentSchema);
 const AllStats = mongoose.model('AllStats', allStatsSchema);
 
-module.exports = { Post, Comment, AllStats };
+module.exports = { Reply, Post, Comment, AllStats };

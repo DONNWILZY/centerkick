@@ -1,7 +1,7 @@
 //newUpdateControllers.js
 
 const mongoose = require('mongoose');
-const { Post, Comment } = require('../models/NewsUpdates');
+const { Post, Comment , Reply } = require('../models/NewsUpdates');
 const User = require('../models/User');
 
 
@@ -135,28 +135,37 @@ const comment = new Comment({
 // Create a Reply to a Comment
 const addReplyToComment = async (commentId, replyText, userId) => {
   try {
-    const reply = {
+    const reply = new Reply({
       text: replyText,
       image: '', // Add the image if needed
       commentAuthor: userId,
       repliedBy: userId,
-    };
+    });
+
+    // Save the reply document to the database
+    await reply.save();
 
     // Find the comment by ID and update the replies array
-    await Comment.findByIdAndUpdate(commentId, {
+    const updatedComment = await Comment.findByIdAndUpdate(commentId, {
       $push: {
-        replies: reply,
+        replies: reply._id, // Push the reply's ID
       },
     });
 
-    // Find the updated comment
-    const updatedComment = await Comment.findById(commentId);
+    //console.log('Reply added successfully:', reply);
 
-    return updatedComment;
+    // return updatedComment.replies; this is returning all the reply ids
+     return reply; 
   } catch (error) {
+    console.error('Error adding a reply to the comment:', error);
     throw new Error('An error occurred while adding a reply to the comment.');
   }
 };
+
+
+
+
+
 
 
 
@@ -175,9 +184,9 @@ const getAllPosts = async () => {
         }
       })
       .populate({
-        path: 'comments.replies', // Populate the 'replies' field within comments
+        path: 'comments.replies', // Correct path to populate replies within comments
         populate: {
-          path: 'repliedBy', // Populate the 'repliedBy' field in replies
+          path: 'repliedBy',
           select: 'fullname'
         }
       })
@@ -191,19 +200,7 @@ const getAllPosts = async () => {
 };
 
 
-async function getAllPostss() {
-  // Get all posts
-  const posts = await Post.find().populate('comments');
 
-  // Populate the comments with replies
-  for (const post of posts) {
-    for (const comment of post.comments) {
-      await comment.populate('replies');
-    }
-  }
-
-  return posts;
-}
 
 
 

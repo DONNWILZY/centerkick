@@ -38,12 +38,12 @@ router.post('/comment/:postId', verifyToken, verifyAdmin || verifyModerator, asy
       const { text } = req.body;
       const { userId } = req.user;
   
-      const updatedComment = await addReplyToComment(commentId, text, userId);
+      const replies = await addReplyToComment(commentId, text, userId);
   
       return res.status(201).json({
         status: 'success',
         message: 'Reply added successfully.',
-        comment: updatedComment,
+        replies: replies, // Returning the replies
       });
     } catch (error) {
       return res.status(500).json({
@@ -52,18 +52,19 @@ router.post('/comment/:postId', verifyToken, verifyAdmin || verifyModerator, asy
       });
     }
   });
-
+  
 
 //   router.get('/posts', getAllPosts);
 
 router.get('/posts', async (req, res) => {
     try {
       const posts = await getAllPosts();
-      return res.status(200).json({ status: 'success', data: posts });
+      res.status(200).json({ status: 'success', data: posts });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ status: 'error', message: 'An error occurred while fetching posts.' });
+      res.status(500).json({ status: 'error', message: 'An error occurred while fetching posts.' });
     }
   });
+  
   
 module.exports = router;

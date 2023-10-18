@@ -24,3 +24,48 @@
     }
   });
   
+  router.post('/replycomment/:commentId', verifyToken, verifyAdmin || verifyModerator, async (req, res) => {
+    try {
+      const { commentId } = req.params;
+      const { text } = req.body;
+      const { userId } = req.user;
+  
+      const updatedComment = await addReplyToComment(commentId, text, userId);
+  
+      return res.status(201).json({
+        status: 'success',
+        message: 'Reply added successfully.',
+        comment: updatedComment,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'An error occurred while adding a reply to the comment.',
+      });
+    }
+  });
+
+  const addReplyToComment = async (commentId, replyText, userId) => {
+    try {
+      const reply = {
+        text: replyText,
+        image: '', // Add the image if needed
+        commentAuthor: userId,
+        repliedBy: userId,
+      };
+  
+      // Find the comment by ID and update the replies array
+      await Comment.findByIdAndUpdate(commentId, {
+        $push: {
+          replies: reply,
+        },
+      });
+  
+      // Find the updated comment
+      const updatedComment = await Comment.findById(commentId);
+  
+      return updatedComment;
+    } catch (error) {
+      throw new Error('An error occurred while adding a reply to the comment.');
+    }
+  };
