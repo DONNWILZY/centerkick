@@ -18,7 +18,7 @@ const currentUrl = `${process.env.CURRENTURL}:${PORT}`;
 const cloudDB = process.env.databaseUrl
 const localDB = process.env.MONGODB_URI
 
-const dataB =  cloudDB || localDB 
+const dataB =   localDB || cloudDB
 
 app.get('/', (req, res) => {
     res.send('hello there')
@@ -26,9 +26,13 @@ app.get('/', (req, res) => {
 
 // Import routes
 const authRoute = require('./routes/authRoute');
+const userRoute = require('./routes/userRoute');
+const newsUpdates = require('./routes/newsRoute');
 
 // Routes middlewares
 app.use('/api/auth', authRoute);
+app.use('/api/user', userRoute);
+app.use('/api/news', newsUpdates);
 
 // Database connection
 mongoose.connect(dataB, { useNewUrlParser: true, useUnifiedTopology: true });

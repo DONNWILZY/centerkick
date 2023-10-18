@@ -2,19 +2,26 @@ const mongoose = require('mongoose');
 
 // User Schema
 const athleteSchema = new mongoose.Schema({
-    fullname: {
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
     name: {
         type: String,
-    },
+    }, 
+
     bio: {
         type: String,
         required: true,
     },
     dob: {
         type: Date,
+    },
+    age:{
+        type: Number
+    },
+    placeOfBirth:{
+        type: String
     },
     location: {
         type: String,
@@ -23,7 +30,10 @@ const athleteSchema = new mongoose.Schema({
         type: String,
     },
     position: {
-        type: [String],
+        type: String,
+    },
+    otherPosition:{
+        type: String,
     },
     yearJoined: {
         type: Date,
@@ -80,16 +90,31 @@ const athleteSchema = new mongoose.Schema({
             },
         },
     ],
-    socialMedia: {
-        type: [String]
-    },
+    socialMedia: [
+        {
+            name: {
+                type: String,
+                required: true,
+            },
+            link: {
+                type: String,
+                required: true,
+            },
+        },
+    ],
 }, { timestamps: true });
+
 
 // Stats Schema
 const statsSchema = new mongoose.Schema({
     athlete: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Athlete',
+    },
+
+     user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
     },
 
     date: {
@@ -108,6 +133,10 @@ const transferSchema = new mongoose.Schema({
     athlete: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Athlete',
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
     },
     season: {
         type: String,
@@ -131,6 +160,10 @@ const nextMatchSchema = new mongoose.Schema({
     athlete: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Athlete',
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
     },
     
     date: {
@@ -163,12 +196,28 @@ const careerStatSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Athlete',
     },
+
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    },
     
     season: {
         type: String,
     },
-    // ... other career stats fields ...
+    // other career stats fields 
 }, { timestamps: true });
+
+// Pre-save hook to calculate age from schema and store in age
+athleteSchema.pre('save', function(next) {
+    const today = new Date();
+    const age = today.getFullYear() - this.dob.getFullYear() - ((today.getMonth() < this.dob.getMonth()) || (today.getMonth() === this.dob.getMonth() && today.getDate() < this.dob.getDate()));
+    this.age = age;
+    next();
+    console.log(age);/// remove later
+  });
+
+ 
 
 // Create the Models
 const Athlete = mongoose.model('Athlete', athleteSchema);

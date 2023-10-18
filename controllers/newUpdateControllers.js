@@ -1,152 +1,215 @@
+//newUpdateControllers.js
+
 const mongoose = require('mongoose');
 const { Post, Comment } = require('../models/NewsUpdates');
 const User = require('../models/User');
 
 
 // Create a Blog Post (Only for admin and moderator)
-const createBlogPost = async (req, res) => {
-    const { title, content, author, publicationStatus,featuredImage, tags, summary, canonicalUrl, metaDescription , isPopular, isTrending, featured, images} = req.body;
-    const userId = req.params.userId; // Get the userId from the route params 
-    
-    
-  
-    try {
-      // Fetch the user to check their role
-      const user = await User.findById(userId);
-  
-      if (!user) {
-        return res.status(404).json({
-          status: 'failed',
-          message: 'User not found.',
-        });
-      }
-  
-      // Check if the user is an admin or moderator
-      if (user.role !== 'isAdmin' && user.role !== 'isModerator') {
-        return res.status(403).json({
-          status: 'failed',
-          message: 'Only admin and moderator can create blog posts.',
-        });
-      }
-  
-      const post = new Post({
-        title,
-        featuredImage,
-        content,
-        author,
-        tags,
-        summary,
-        metaDescription,
-        canonicalUrl,
-        isPopular,
-        isTrending,
-        featured,        
-        publicationStatus,
-        images,
-        postedBy: userId, // Store the user ID of the creator
-      });
-  
-      await blog.save();
-  
-      return res.status(201).json({
-        status: 'success',
-        message: 'Blog post created successfully.',
-        blog,
-      });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({
+const createNews = async (req, res) => {
+  try {
+    const {
+      title,
+      content,
+      author,
+      publicationStatus,
+      featuredImage,
+      tags,
+      summary,
+      canonicalUrl,
+      metaDescription,
+      isPopular,
+      isTrending,
+      featured,
+      images,
+    } = req.body;
+    const { userId } = req.params; // Get the userId from the route params
+
+    // Validate the post data.
+    if (!title || !content) {
+      return res.status(400).json({
         status: 'failed',
-        message: 'An error occurred while creating the blog post.',
+        message: 'Title and content are required fields.',
       });
     }
-  };
-  
 
-// Create a Comment on a Blog Post
-const createComment = async (req, res) => {
-  const { text } = req.body;
-  const blogId = req.params.blogId; // ID of the blog post
+    // Fetch the user to check their role.
+    const user = await User.findById(userId);
 
-  try {
-    const comment = new Comment({
-      text,
-      PostAuthor: req.user.userId, // Store the user ID of the author of the blog post
-      commentedBy: req.user.userId, // Reference to the user who commented
-    });
-    await comment.save();
-
-    // Add the comment to the blog post's comments array
-    const post = await Post.findById(blogId);
-    if (!blog) {
+    if (!user) {
       return res.status(404).json({
         status: 'failed',
-        message: 'Blog post not found.',
+        message: 'User not found.',
       });
     }
-    post.comments.push(comment);
+
+    // Check if the user is an admin or moderator.
+    if (!['isAdmin', 'isModerator'].includes(user.role)) {
+      return res.status(403).json({
+        status: 'failed',
+        message: 'Only admin and moderator users can create blog posts.',
+      });
+    }
+
+    // Create a new Post object with the post data.
+    const post = new Post({
+      title,
+      featuredImage,
+      content,
+      author,
+      tags,
+      summary,
+      metaDescription,
+      canonicalUrl,
+      isPopular,
+      isTrending,
+      featured,
+      publicationStatus,
+      images,
+      postedBy: userId, // Store the user ID of the creator
+    });
+
+    // Save the post to the database.
     await post.save();
 
+    // Return the created post to the client.
     return res.status(201).json({
       status: 'success',
-      message: 'Comment created successfully.',
-      comment,
+      message: 'Blog post created successfully.',
+      post,
     });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      status: 'failed',
-      message: 'An error occurred while creating the comment.',
+      status: 'error',
+      message: 'An internal server error occurred.',
     });
   }
 };
 
 
-// Create a Reply to a Comment
-const createReply = async (req, res) => {
-    const { text } = req.body;
-    const commentId = req.params.commentId; // ID of the comment being replied to
+
   
-    try {
-      // Find the comment to which the reply belongs
-      const comment = await Comment.findById(commentId);
-      if (!comment) {
-        return res.status(404).json({
-          status: 'failed',
-          message: 'Comment not found.',
-        });
+
+// Create a Comment on a Blog Post
+// Create a Comment on a Blog Post and return the created comment
+const addCommentToPost = async (postId, commentText, userId) => {
+  try {
+    // Create a new comment document
+    
+   
+const comment = new Comment({
+      text: commentText,
+      PostAuthor: postId, // Assuming you store the post ID in PostAuthor
+      commentedBy: userId,
+    });
+
+    // Save the comment document to the database
+    await comment.save();
+
+    // Update the post document to include the new comment ID
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $push: {
+          comments: comment._id,
+        },
+      },
+      {
+        new: true, // To return the updated post document
       }
-  
-      const reply = {
-        text,
-        author: req.user.userId, // Store the user ID of the reply creator
-        comment, // Remove the 'comment' property
-        post: comment.post, // Store the associated blog post ID
-        repliedBy: req.user.userId, // Store the user who replied
-      };
-  
-      // Add the reply to the replies array of the comment
-      comment.replies.push(reply);
-      await comment.save();
-  
-      // Get the newly created reply's _id
-      const replyId = reply._id;
-  
-      // Return the reply and replyId in the response
-      return res.status(201).json({
-        status: 'success',
-        message: 'Reply created successfully.',
-        reply,
-        replyId, // Include replyId in the response
-      });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({
-        status: 'failed',
-        message: 'An error occurred while creating the reply.',
-      });
+    );
+
+    return comment; // Return the created comment
+  } catch (error) {
+    // Handle errors, e.g., log the error or throw a custom error
+    console.error(error);
+    throw new Error('An error occurred while adding a comment to the post.');
+  }
+};
+
+
+
+
+
+// Create a Reply to a Comment
+const addReplyToComment = async (commentId, replyText, userId) => {
+  try {
+    const reply = {
+      text: replyText,
+      image: '', // Add the image if needed
+      commentAuthor: userId,
+      repliedBy: userId,
+    };
+
+    // Find the comment by ID and update the replies array
+    await Comment.findByIdAndUpdate(commentId, {
+      $push: {
+        replies: reply,
+      },
+    });
+
+    // Find the updated comment
+    const updatedComment = await Comment.findById(commentId);
+
+    return updatedComment;
+  } catch (error) {
+    throw new Error('An error occurred while adding a reply to the comment.');
+  }
+};
+
+
+
+const getAllPosts = async () => {
+  try {
+    const posts = await Post.find()
+      .populate({
+        path: 'postedBy',
+        select: 'fullname'
+      })
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'commentedBy',
+          select: 'fullname'
+        }
+      })
+      .populate({
+        path: 'comments.replies', // Populate the 'replies' field within comments
+        populate: {
+          path: 'repliedBy', // Populate the 'repliedBy' field in replies
+          select: 'fullname'
+        }
+      })
+      .exec();
+
+    return posts;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while fetching posts.');
+  }
+};
+
+
+async function getAllPostss() {
+  // Get all posts
+  const posts = await Post.find().populate('comments');
+
+  // Populate the comments with replies
+  for (const post of posts) {
+    for (const comment of post.comments) {
+      await comment.populate('replies');
     }
-  };
+  }
+
+  return posts;
+}
+
+
+
+
+
+
   
 
 
@@ -260,10 +323,11 @@ const getAllBlogPosts = async () => {
 
 
 const blogController = {
-    createBlogPost,
-    createComment,
+    createNews,
+    addCommentToPost,
+    getAllPosts,
     getBlogPostById,
-    createReply,
+    addReplyToComment,
     populateCommentsAndReplies,
     getAllBlogPosts
 

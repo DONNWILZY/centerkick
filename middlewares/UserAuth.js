@@ -1,9 +1,9 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
-const bodyParser = require("body-parser");
-const dotenv = require("dotenv");
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
 dotenv.config();
 
 // app.use(cookieParser());

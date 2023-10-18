@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-//const { v4: uuidv4 } = require("uuid");
 const User = require("../models/User");
 const OTPCode = require("../models/OtpCode");
 const transporter = require("../utilities/transporter");

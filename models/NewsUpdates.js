@@ -1,19 +1,16 @@
+///NewsUpdates.js
 const mongoose = require('mongoose');
 
 // Comment Schema
 const commentSchema = new mongoose.Schema({
-  objectId: {
-    type: mongoose.Types.ObjectId,
-    // required: true,
-  },
   text: {
     type: String,
-    required: true,
+    // required: true,
   },
   PostAuthor: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    //required: true,
   },
   date: {
     type: Date,
@@ -22,13 +19,13 @@ const commentSchema = new mongoose.Schema({
   commentedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    //required: true,
   },
   replies: [
     {
       text: {
         type: String,
-        required: true,
+        //required: true,
       },
       image: {
         type: String,
@@ -54,10 +51,6 @@ const commentSchema = new mongoose.Schema({
 
 // Post Schema
 const postSchema = new mongoose.Schema({
-  objectId: {
-    type: mongoose.Types.ObjectId,
-    // required: true,
-  },
   title: {
     type: String,
     required: true,
@@ -86,16 +79,13 @@ const postSchema = new mongoose.Schema({
   },
   content: {
     type: String,
+    required: true,
   },
   featuredImage: {
     type: String,
   },
-  comments: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Comment', // Reference the Comment schema
-    },
-],
+
+  comments: [commentSchema], 
 
   views: {
     type: Number,
@@ -109,7 +99,7 @@ const postSchema = new mongoose.Schema({
   publicationStatus: {
     type: String,
     enum: ['approved', 'declined', 'pending'],
-    default: 'pending',
+    default: 'approved',
   },
   featured: {
     type: Boolean,
@@ -129,8 +119,9 @@ const postSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
+
 // Statistics Schema
-const statsSchema = new mongoose.Schema({
+const allStatsSchema = new mongoose.Schema({
   postStats: {
     totalPosts: {
       type: Number,
@@ -156,6 +147,6 @@ const statsSchema = new mongoose.Schema({
 
 const Post = mongoose.model('Post', postSchema);
 const Comment = mongoose.model('Comment', commentSchema);
-const Stats = mongoose.model('Stats', statsSchema);
+const AllStats = mongoose.model('AllStats', allStatsSchema);
 
-module.exports = { Post, Comment, Stats };
+module.exports = { Post, Comment, AllStats };

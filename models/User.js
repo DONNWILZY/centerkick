@@ -1,23 +1,28 @@
 const mongoose = require('mongoose');
+const {Athlete, Stats, Transfer, NextMatch, CareerStat} = require('./Athlete'); 
 
 // Define the User Schema
 const userSchema = new mongoose.Schema({
+  athlete: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Athlete',
+},
   fullname: {
     type: String,
-    required: true,
+   // required: true,
   },
   password: {
     type: String,
-    required: true,
+    //required: true,
   },
   phoneNumber: {
     type: String,
-    unique: true,
+    //unique: true,
   },
   email: {
     type: String,
     unique: true,
-    required: true,
+    //required: true,
   },
   verifiedEmail: {
     type: Boolean,
@@ -54,30 +59,18 @@ const userSchema = new mongoose.Schema({
       type: String,
     },
   },
+
   isAthlete: {
     type: Boolean,
+    default: true,
   },
-  createdBy: [
-    {
-      admin: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-      },
-      fullname: {  // Corrected field name
-        type: String,
-      },
-      email: {
-        type: String,
-      },
-      content: {
-        type: String,
-      },
-      timestamp: {
-        type: Date,
-        default: Date.now,
-      },
-    },
-  ],
+
+  athletes: [Athlete.schema], // Embed athlete data
+  stats: [Stats.schema], // Embed stats data
+  transfers: [Transfer.schema], // Embed transfer data
+  nextMatches: [NextMatch.schema], // Embed nextMatch data
+  careerStats: [CareerStat.schema], // Embed careerStat data
+
 },
 
 
