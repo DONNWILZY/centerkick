@@ -47,7 +47,13 @@ const commentSchema = new mongoose.Schema({
     ref: 'User',
     //required: true,
   },
-  replies: [replySchema], 
+  // replies: [replySchema], 
+  replies: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Reply' // Correct reference to the Reply model
+    }
+  ],
 
 }, { timestamps: true });
 

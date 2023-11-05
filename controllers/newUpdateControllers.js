@@ -92,7 +92,6 @@ const createNews = async (req, res) => {
   
 
 // Create a Comment on a Blog Post
-// Create a Comment on a Blog Post and return the created comment
 const addCommentToPost = async (postId, commentText, userId) => {
   try {
     // Create a new comment document
@@ -201,6 +200,29 @@ const getAllPosts = async () => {
 
 
 
+// controllers/newUpdateControllers.js
+
+const updatePost = async (postId, updatedPostData) => {
+  try {
+    // Find the post by its ID and update it with the new data
+    const updatedPost = await Post.findByIdAndUpdate(postId, updatedPostData, { new: true });
+
+    if (!updatedPost) {
+      throw new Error('Post not found.');
+    }
+
+    return updatedPost;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while updating the post.');
+  }
+};
+
+
+
+
+
+
 
 
 
@@ -246,45 +268,7 @@ const populateCommentsAndReplies = async (blogId, userId) => {
 
 
 
-  
-///// blof post by id
-const getBlogPostById = async (blogId) => {
-  // Convert blogId to a string and then trim it to remove any leading/trailing whitespace
-  const trimmedBlogId = String(blogId).trim();
-
-  if (!mongoose.Types.ObjectId.isValid(trimmedBlogId)) {
-    throw new Error('Invalid blogId. It must be a valid ObjectId.');
-  }
-
-  try {
-    // Use findById to retrieve the blog post by its ObjectID
-    const blogPost = await Blog.findById(trimmedBlogId)
-      .populate('postedBy', 'username') // Populate the 'postedBy' field with username
-      .populate({
-        path: 'comments',
-        populate: [
-          { path: 'commentedBy', select: 'username' },
-          {
-            path: 'replies',
-            populate: [
-              { path: 'commentAuthor', select: 'username' },
-              { path: 'repliedBy', select: 'username' },
-            ],
-          },
-        ],
-      });
-
-    if (!blogPost) {
-      // If the blog post is not found, you can throw an error or handle it accordingly
-      throw new Error('Blog post not found');
-    }
-
-    return blogPost;
-  } catch (error) {
-    // Handle any errors that may occur during the query
-    throw new Error(`Error fetching blog post: ${error.message}`);
-  }
-};
+ 
 
 //// get all blogpost
 const getAllBlogPosts = async () => {
@@ -322,12 +306,10 @@ const getAllBlogPosts = async () => {
 const blogController = {
     createNews,
     addCommentToPost,
-    getAllPosts,
-    getBlogPostById,
     addReplyToComment,
-    populateCommentsAndReplies,
-    getAllBlogPosts
-
+    getAllPosts,
+    updatePost,
+ 
 
   };
 

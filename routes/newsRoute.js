@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { createNews, addCommentToPost, addReplyToComment, getAllPosts } = require('../controllers/newUpdateControllers');
+const { 
+    createNews, 
+    addCommentToPost, 
+    addReplyToComment, 
+    getAllPosts, 
+    updatePost  
+} = require('../controllers/newUpdateControllers');
 const {verifyToken, verifyUser, verifyAdmin, verifyModerator} = require('../middlewares/UserAuth')
 
 
@@ -59,12 +65,29 @@ router.post('/comment/:postId', verifyToken, verifyAdmin || verifyModerator, asy
 router.get('/posts', async (req, res) => {
     try {
       const posts = await getAllPosts();
-      res.status(200).json({ status: 'success', data: posts });
+      return res.status(200).json({ status: 'success', data: posts });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ status: 'error', message: 'An error occurred while fetching posts.' });
+      return res.status(500).json({ status: 'error', message: 'An error occurred while fetching posts.' });
     }
   });
   
+
+// Update a specific post
+// router.put('/post/:postId', verifyToken, verifyAdmin || verifyModerator, async (req, res) => {
+//     try {
+//       const { postId } = req.params;
+//       const updatedPostData = req.body;
   
+//       const updatedPost = await updatePost(postId, updatedPostData);
+  
+//       res.status(200).json({
+//         status: 'success',
+//         message: 'Post updated successfully.',
+//         post: updatedPost,
+//       });
+//     } 
+
+
+
 module.exports = router;
