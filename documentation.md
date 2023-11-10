@@ -137,3 +137,48 @@ Content-Type: application/json
 # verifyPasswordOTP
 
 # newPassword
+
+
+
+
+
+# POST NEWS UPDATE
+*ROUTE:* Method: PUT /api/news/createNews/:userId 
+
+
+Request
+Method: POST
+Endpoint: https://centerkick.vercel.app/api/news/createNews/652d3cb74931e41941337093
+Headers: Authorization - YES
+
+```
+{
+  "title": "I MA TIRED",
+  "content": "TINUBU has approved local league",
+  "author": "John Doe",
+  "publicationStatus": "approved",
+  "featuredImage": "https://example.com/images/blog-feature.jpg",
+  "tags": ["technology", "programming"],
+  "summary": "A brief summary of the blog post.",
+  "canonicalUrl": "https://example.com/blog/sample-post",
+  "metaDescription": "Meta description for SEO",
+  "isPopular": true,
+  "isTrending": false,
+  "featured": true,
+  "images": [
+    {
+      "url": "https://example.com/images/image1.jpg",
+      "caption": "Image 1"
+    },
+    {
+      "url": "https://example.com/images/image2.jpg",
+      "caption": "Image 2"
+    }
+  ]
+}
+
+
+```
+
+
+
