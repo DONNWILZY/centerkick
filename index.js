@@ -11,6 +11,9 @@ app.use(express.json());
 const dotenv = require('dotenv');
 dotenv.config()
 
+/// apply cors
+app.use(cors());
+
 //// port and localUrl
 const PORT = process.env.PORT || 3000;
 const currentUrl = `${process.env.CURRENTURL}:${PORT}`;
