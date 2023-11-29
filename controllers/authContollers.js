@@ -156,7 +156,8 @@ require("dotenv").config();
           // For now, let's skip OTP and verification logic
           return res.status(400).json({
             status: 'fail',
-            message: 'User created but not verified. Check your email or request a new OTP.',
+            // message: 'User created but not verified. Check your email or request a new OTP.',
+            message: 'Email already exists, please use another one'
           });
         }
       }

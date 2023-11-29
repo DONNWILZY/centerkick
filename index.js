@@ -32,11 +32,13 @@ app.get('/', (req, res) => {
 const authRoute = require('./routes/authRoute');
 const userRoute = require('./routes/userRoute');
 const newsUpdates = require('./routes/newsRoute');
+const fixturesRoute = require('./routes/fixruresRoute');
 
 // Routes middlewares
 app.use('/api/auth', authRoute);
 app.use('/api/user', userRoute);
 app.use('/api/news', newsUpdates);
+app.use('/api/fixtures', fixturesRoute);
 
 // Database connection
 mongoose.connect(dataB, { useNewUrlParser: true, useUnifiedTopology: true });

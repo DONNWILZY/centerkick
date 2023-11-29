@@ -12,12 +12,7 @@ const createNews = async (req, res) => {
       title,
       content,
       author,
-      publicationStatus,
       featuredImage,
-      tags,
-      summary,
-      canonicalUrl,
-      metaDescription,
       isPopular,
       isTrending,
       featured,
@@ -54,17 +49,12 @@ const createNews = async (req, res) => {
     // Create a new Post object with the post data.
     const post = new Post({
       title,
-      featuredImage,
       content,
       author,
-      tags,
-      summary,
-      metaDescription,
-      canonicalUrl,
+      featuredImage,
       isPopular,
       isTrending,
       featured,
-      publicationStatus,
       images,
       postedBy: userId, // Store the user ID of the creator
     });
@@ -76,7 +66,7 @@ const createNews = async (req, res) => {
     return res.status(201).json({
       status: 'success',
       message: 'Blog post created successfully.',
-      post,
+      post
     });
   } catch (error) {
     console.error(error);
