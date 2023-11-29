@@ -7,17 +7,136 @@ require("dotenv").config();
 
 
 /////// 6 DIGIT CODE GENERATOR
-const generateOTPCode = () => {
-    const digits = "0123456789";
-    let otpCode = "";
-    for (let i = 0; i < 6; i++) {
-      otpCode += digits[Math.floor(Math.random() * 10)];
-    }
-    return otpCode;
-  };
+// const generateOTPCode = () => {
+//     const digits = "0123456789";
+//     let otpCode = "";
+//     for (let i = 0; i < 6; i++) {
+//       otpCode += digits[Math.floor(Math.random() * 10)];
+//     }
+//     return otpCode;
+//   };
+
+  // const registerUser = async (req, res) => {
+  //   const { fullname,username, email, password } = req.body;
+  
+  //   try {
+  //     // Check if the user with the given email already exists
+  //     let user = await User.findOne({ email });
+  
+  //     if (user) {
+  //       if (user.verifiedEmail) {
+  //         // User already exists and is verified
+  //         return res.status(400).json({
+  //           status: 'fail',
+  //           message: 'Email Exist, use another one',
+  //         });
+  //       // } else {
+
+  //         // User exists but is not verified
+  //         // Resend OTP for account verification
+  //         // const otpCode = generateOTPCode();
+  
+  //         // Set the expiration time to 10 minutes from now
+  //         // const expirationTime = new Date(Date.now() + 10 * 60 * 1000);
+  
+  //         // // Save OTP code to the database
+  //         // const otpCodeRecord = new OTPCode({
+  //         //   userId: user._id,
+  //         //   code: otpCode,
+  //         //   createdAt: Date.now(),
+  //         //   expiresAt: expirationTime,
+  //         // });
+  //         // await otpCodeRecord.save();
+  
+  //         // Prepare and send the email using the transporter and sendEmail function
+  //         // const mailOptions = {
+  //         //   from: process.env.AUTH_EMAIL,
+  //         //   to: user.email,
+  //         //   subject: 'Verify Your Email',
+  //         //   html: `
+  //         //     <h1>Email Verification</h1>
+  //         //     <h3>Welcome ${fullname}, </h3>
+  //         //     <p>Please enter the verification code to continue.</p>
+  //         //     <h2><strong>${otpCode}</strong></h2>
+  //         //   `,
+  //         // };
+  
+  //         // await transporter.sendMail(mailOptions);
+  
+  //         // return res.status(200).json({
+  //         //   status: 'success',
+  //         //   message: 'Account already registered, new OTP sent for verification.',
+  //         // });
+  //       }
+  //     }
+  
+  //     // If the user does not exist, create a new user and set their verified status to false
+  //     const hashedPassword = await bcrypt.hash(password, 10); // 10 is the number of salt rounds
+  //     const newUser = new User({
+  //       fullname,
+  //       username,
+  //       email, // Ensure email uniqueness is enforced in your database schema
+  //       password: hashedPassword,
+  //       verifiedEmail: false,
+  //     });
+  
+  //     const savedUser = await newUser.save();
+
+  //     const token = jwt.sign({ userId: savedUser._id }, process.env.JWT_SEC_KEY, {
+  //       expiresIn: "24h",
+  //     });
+      
+  
+  //     // Send OTP code to the user's email
+  //     // const otpCode = generateOTPCode();
+  
+  //     // Set the expiration time to 10 minutes from now
+  //     // const expirationTime = new Date(Date.now() + 10 * 60 * 1000);
+  
+  //     // // Save OTP code to the database
+  //     // const otpCodeRecord = new OTPCode({
+  //     //   userId: savedUser._id,
+  //     //   code: otpCode,
+  //     //   createdAt: Date.now(),
+  //     //   expiresAt: expirationTime,
+  //     // });
+  //     // await otpCodeRecord.save();
+
+      
+  
+  //     // Prepare and send the email using the transporter and sendEmail function
+  //     // const mailOptions = {
+  //     //   from: process.env.AUTH_EMAIL,
+  //     //   to: savedUser.email,
+  //     //   subject: 'Verify Your Email',
+  //     //   html: `
+  //     //     <h1>Email Verification</h1>
+  //     //     <p> Hello, ${fullname}, Welcome to Center Kick Community. Please enter the verification code to continue.</p>
+  //     //     <h3><strong>${otpCode}</strong></h3>
+  //     //   `,
+  //     // };
+  
+  //     // await transporter.sendMail(mailOptions);
+  
+  //     return res.status(200).json({
+  //       status: 'success',
+  //       // message: 'Sign up successful, OTP sent for verification.',
+  //       message: 'Sign up successful, ',
+  //       user_id: savedUser._id,
+  //       token: token,
+  //     });
+
+  //   } catch (error) {
+  //     console.error('Error while registering user:', error);
+  //     return res.status(500).json({
+  //       status: 'failed',
+  //       message: 'An error occurred while signing up. Please try again.',
+  //     });
+  //   }
+  // };
 
   const registerUser = async (req, res) => {
-    const { fullname, email, password } = req.body;
+    const { fullname, username, email, password } = req.body;
   
     try {
       // Check if the user with the given email already exists
@@ -28,43 +147,16 @@ const generateOTPCode = () => {
           // User already exists and is verified
           return res.status(400).json({
             status: 'fail',
-            message: 'Account already exists and is verified. Kindly login.',
+            message: 'Email already exists, please use another one.',
           });
         } else {
           // User exists but is not verified
-          // Resend OTP for account verification
-          const otpCode = generateOTPCode();
+          // You can add OTP and email verification logic here if needed
   
-          // Set the expiration time to 10 minutes from now
-          const expirationTime = new Date(Date.now() + 10 * 60 * 1000);
-  
-          // Save OTP code to the database
-          const otpCodeRecord = new OTPCode({
-            userId: user._id,
-            code: otpCode,
-            createdAt: Date.now(),
-            expiresAt: expirationTime,
-          });
-          await otpCodeRecord.save();
-  
-          // Prepare and send the email using the transporter and sendEmail function
-          const mailOptions = {
-            from: process.env.AUTH_EMAIL,
-            to: user.email,
-            subject: 'Verify Your Email',
-            html: `
-              <h1>Email Verification</h1>
-              <h3>Welcome ${fullname}, </h3>
-              <p>Please enter the verification code to continue.</p>
-              <h2><strong>${otpCode}</strong></h2>
-            `,
-          };
-  
-          await transporter.sendMail(mailOptions);
-  
-          return res.status(200).json({
-            status: 'success',
-            message: 'Account already registered, new OTP sent for verification.',
+          // For now, let's skip OTP and verification logic
+          return res.status(400).json({
+            status: 'fail',
+            message: 'User created but not verified. Check your email or request a new OTP.',
           });
         }
       }
@@ -73,6 +165,7 @@ const generateOTPCode = () => {
       const hashedPassword = await bcrypt.hash(password, 10); // 10 is the number of salt rounds
       const newUser = new User({
         fullname,
+        username,
         email, // Ensure email uniqueness is enforced in your database schema
         password: hashedPassword,
         verifiedEmail: false,
@@ -80,39 +173,19 @@ const generateOTPCode = () => {
   
       const savedUser = await newUser.save();
   
-      // Send OTP code to the user's email
-      const otpCode = generateOTPCode();
-  
-      // Set the expiration time to 10 minutes from now
-      const expirationTime = new Date(Date.now() + 10 * 60 * 1000);
-  
-      // Save OTP code to the database
-      const otpCodeRecord = new OTPCode({
-        userId: savedUser._id,
-        code: otpCode,
-        createdAt: Date.now(),
-        expiresAt: expirationTime,
+      const token = jwt.sign({ userId: savedUser._id }, process.env.JWT_SEC_KEY, {
+        expiresIn: "24h",
       });
-      await otpCodeRecord.save();
   
-      // Prepare and send the email using the transporter and sendEmail function
-      const mailOptions = {
-        from: process.env.AUTH_EMAIL,
-        to: savedUser.email,
-        subject: 'Verify Your Email',
-        html: `
-          <h1>Email Verification</h1>
-          <p> Hello, ${fullname}, Welcome to Center Kick Community. Please enter the verification code to continue.</p>
-          <h3><strong>${otpCode}</strong></h3>
-        `,
-      };
-  
-      await transporter.sendMail(mailOptions);
+      // For simplicity, skipping OTP and email verification logic here
   
       return res.status(200).json({
         status: 'success',
-        message: 'Sign up successful, OTP sent for verification.',
+        message: 'Sign up successful.',
+        user_id: savedUser._id,
+        token: token,
       });
+  
     } catch (error) {
       console.error('Error while registering user:', error);
       return res.status(500).json({
@@ -121,6 +194,7 @@ const generateOTPCode = () => {
       });
     }
   };
+  
   
   
 
