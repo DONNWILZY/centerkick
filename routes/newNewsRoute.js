@@ -11,6 +11,6 @@ router.get('/trending-news', newsController.getTrending);
 router.get('/top-story', newsController.getTopStory);
 router.get('/latest', newsController.getNewest);
 router.get('/popular', newsController.getPopular);
-router.get('/trending', newsController.getTrending);  //getTrending
+router.get('/trending', newsController.getTrending);  
 
 module.exports = router;

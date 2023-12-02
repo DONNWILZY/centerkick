@@ -206,52 +206,36 @@ require("dotenv").config();
   const loginUser = async (req, res, next) => {
     try {
       const {  email, password } = req.body;
-  
       if (!email) {
         return res.status(400).json({
           status: "failed",
           message: "Username or Email field is required",
         });
       }
-  
       let user;
-  
       if (email) {
         // If an email is provided, find the user by email
         user = await User.findOne({ email });
       }
-
       if (!user) {
         return res.status(404).json({
           status: "failed",
           message: "User not found",
         });
       }
-  
       const isPasswordValid = await bcrypt.compare(password, user.password);
-  
       if (!isPasswordValid) {
         return res.status(400).json({
           status: "failed",
           message: "Invalid password",
         });
       }
-  
-      if (!user.verifiedEmail) {
-        return res.status(400).json({
-          status: "failed",
-          message: "Please verify your email before signing in",
-        });
-      }
-  
       // Set the user's activeStatus to "online"
       // user.activeStatus = "online";
       await user.save();
-  
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SEC_KEY, {
         expiresIn: "24h",
       });
-  
       // Create a user details object with the desired fields
       let userDetails = {
         _id: user._id,
@@ -260,7 +244,6 @@ require("dotenv").config();
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       };
-  
       return res.status(200).json({
         status: "success",
         message: "Successfully signed in",
