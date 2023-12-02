@@ -1,7 +1,8 @@
 const express = require('express');
+const router = express.Router();
 const fixturesController = require('../controllers/fixturesController');
 
-const router = express.Router();
+
 
 // Create a new fixture
 router.post('/fixtures', fixturesController.createFixture);

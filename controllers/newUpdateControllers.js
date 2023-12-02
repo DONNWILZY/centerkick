@@ -12,19 +12,25 @@ const createNews = async (req, res) => {
       title,
       content,
       author,
+      date,
+      tags,
+      summary,
       featuredImage,
+      metaDescription,
+      canonicalUrl,
       isPopular,
       isTrending,
       featured,
+      topStory,
       images,
     } = req.body;
     const { userId } = req.params; // Get the userId from the route params
 
     // Validate the post data.
-    if (!title || !content) {
+    if (!title || !content || !author || !date) {
       return res.status(400).json({
         status: 'failed',
-        message: 'Title and content are required fields.',
+        message: 'Title, content, author, and date are required fields.',
       });
     }
 
@@ -46,18 +52,25 @@ const createNews = async (req, res) => {
       });
     }
 
-    // Create a new Post object with the post data.
-    const post = new Post({
-      title,
-      content,
-      author,
-      featuredImage,
-      isPopular,
-      isTrending,
-      featured,
-      images,
-      postedBy: userId, // Store the user ID of the creator
-    });
+ // Create a new Post object with the post data.
+const post = new Post({
+  title,
+  content,
+  author,
+  date,
+  tags,
+  summary,
+  featuredImage,
+  metaDescription,
+  canonicalUrl,
+  isPopular,
+  isTrending,
+  featured,
+  topStory, // Include the topStory field
+  images,   // Include the images field
+  postedBy: userId, // Store the user ID of the creator
+});
+
 
     // Save the post to the database.
     await post.save();
@@ -76,6 +89,7 @@ const createNews = async (req, res) => {
     });
   }
 };
+
 
 
 
@@ -288,6 +302,51 @@ const getAllBlogPosts = async () => {
 };
 
 
+// Controller function to get newest posts
+const getNewestPosts = async (req, res) => {
+  try {
+    // Fetch posts sorted by date in descending order to get the newest ones first
+    const newestPosts = await Post.find().sort({ date: -1 }).limit(5); // Adjust limit as needed
+
+    // Format the response body
+    const formattedPosts = newestPosts.map(post => ({
+      title: post.title,
+      content: post.content,
+      date: post.date.toISOString().split('T')[0], // Format date as "YYYY-MM-DD"
+      author: post.author,
+    }));
+
+    // Send the formatted response
+    res.json(formattedPosts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
+const getTopStories = async (req, res) => {
+  try {
+    // Fetch top stories sorted by date in descending order to get the newest ones first
+    const newestTopStories = await Post.find({ topStory: true }).sort({ date: -1 }).limit(5); // Adjust limit as needed
+
+    // Format the response body
+    const formattedTopStories = newestTopStories.map(post => ({
+      title: post.title,
+      content: post.content,
+      date: post.date.toISOString().split('T')[0], // Format date as "YYYY-MM-DD"
+      author: post.author,
+      topStory: post.topStory,
+    }));
+
+    // Send the formatted response
+    res.json(formattedTopStories);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 
 
 
@@ -299,6 +358,8 @@ const blogController = {
     addReplyToComment,
     getAllPosts,
     updatePost,
+    getNewestPosts,
+    getTopStories
  
 
   };

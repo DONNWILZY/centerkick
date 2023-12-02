@@ -31,14 +31,27 @@ app.get('/', (req, res) => {
 // Import routes
 const authRoute = require('./routes/authRoute');
 const userRoute = require('./routes/userRoute');
+//// old news route
 const newsUpdates = require('./routes/newsRoute');
 const fixturesRoute = require('./routes/fixruresRoute');
+const teamRoute = require('./routes/teamRoutes');
+const trialTransfer = require('./routes/TRIALtrasnferRoute');
+const newNewsUpdates = require('./routes/newNewsRoute');
 
 // Routes middlewares
 app.use('/api/auth', authRoute);
 app.use('/api/user', userRoute);
-app.use('/api/news', newsUpdates);
+// old news middles ware
+app.use('/api/newsold', newsUpdates);
 app.use('/api/fixtures', fixturesRoute);
+app.use('/api/team', teamRoute);
+app.use('/api/trialtransfer', trialTransfer);
+// new news middleware
+app.use('/api/news', newNewsUpdates);
+
+
+
+
 
 // Database connection
 mongoose.connect(dataB, { useNewUrlParser: true, useUnifiedTopology: true });

@@ -5,8 +5,11 @@ const {
     addCommentToPost, 
     addReplyToComment, 
     getAllPosts, 
-    updatePost  
+    updatePost,
+    getNewestPosts,
+    getTopStories
 } = require('../controllers/newUpdateControllers');
+
 const {verifyToken, verifyUser, verifyAdmin, verifyModerator} = require('../middlewares/UserAuth')
 
 
@@ -87,6 +90,11 @@ router.get('/posts', async (req, res) => {
 //         post: updatedPost,
 //       });
 //     } 
+
+router.get('/latest', getNewestPosts);
+
+// Define the route to get newest top stories
+router.get('/top-stories', getTopStories);
 
 
 
